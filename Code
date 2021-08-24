@@ -1,0 +1,120 @@
+#include <iostream>
+#include "gachaStats.h"
+#include <string>
+
+int main()
+{
+    std::string userInput;
+    double expectedCost;
+
+    gachaCal calculation;
+    std::cout << "Greetings, this program calculates expected costs to roll for legendaries, assuming there is pity, in gacha games such as Genshin Impact." << std::endl;
+    std::cout << "Please enter any probabilities in decimal form." << std::endl;
+
+    std::cout << "Please enter the minimum probability of a legendary drop (before any spikes in probability):" << std::endl;
+    std::cin >> calculation.min;
+
+    std::cout << "Please enter the maximum probability of a legendary drop (before any spikes in probability):" << std::endl;
+    std::cin >> calculation.max;
+
+    std::cout << "At which point does pity occur for legendary drops (Number of rolls):" << std::endl;
+    std::cin >> calculation.pityCount;
+
+    std::cout << "Does the probability spike at any point? (Enter y/n)" << std::endl;
+    std::cin >> userInput;
+
+    while (true)
+    {
+        if ((userInput == "y") || (userInput == "Y"))
+        {
+            calculation.spike = true;
+            break;
+        }
+        else if (((userInput == "n") || (userInput == "N")))
+        {
+            calculation.spike = false;
+            break;
+        }
+        else
+        {
+            std::cout << "Incorrect input, please enter y or n)" << std::endl;
+            std::cin >> userInput;
+        }
+    }
+
+    if (calculation.spike)
+    {
+        std::cout << "At which point does a spike in probability occur (Number of rolls):" << std::endl;
+        std::cin >> calculation.spikeCount;
+
+        std::cout << "Please enter the minimum probability of a legendary drop after a spike in probability" << std::endl;
+        std::cin >> calculation.spikeMin;
+
+        std::cout << "Please enter the maximum probability of a legendary drop after a spike in probability" << std::endl;
+        std::cin >> calculation.spikeMax;
+    }
+
+    std::cout << "How many legendaries are you aiming for:" << std::endl;
+    std::cin >> calculation.legendaryCount;
+
+    std::cout << "Are you rolling for a specific legendary? (Enter y/n)" << std::endl;
+    std::cin >> userInput;
+
+    while (true)
+    {
+        if ((userInput == "y") || (userInput == "Y"))
+        {
+            calculation.targetLegendary = true;
+            break;
+        }
+        else if (((userInput == "n") || (userInput == "N")))
+        {
+            calculation.targetLegendary = false;
+            break;
+        }
+        else
+        {
+            std::cout << "Incorrect input, please enter y or n)" << std::endl;
+            std::cin >> userInput;
+        }
+    }
+
+    if (calculation.targetLegendary) 
+    {
+        std::cout << "What is the probability of the legendary that drops being a target one: " << std::endl;
+        std::cin >> calculation.targetLegendProb;
+
+        std::cout << "How many legendary drops can occur before pity for the target legendary: " << std::endl;
+        std::cin >> calculation.legendPityCount;
+    }
+    
+    std::cout << "What is the monetary cost of each roll:" << std::endl;
+    std::cin >> calculation.cost;
+
+    expectedCost = calculation.expectedCost();
+
+    std::cout << "The expected cost is: " << expectedCost << std::endl;
+}
+
+
+/* Pseudo Code
+Runs
+Ask for data:
+   Probability:
+        Max and min?
+        Pity? When, how many trials
+        Spikes? and on what trial
+            Max and min after spike
+        Target legendary pulls? (how many successes)
+        Chance at target pull? (effects successes)
+    Cost per pull
+
+Run Calculation
+
+Show results
+
+*/
+
+// Probabilities of Genshin https://gamerant.com/genshin-impact-pity-system-5-star-character-drop-wish/
+// Statistics formulas?
+//      Binomial distribution but average out max and min probabilities
